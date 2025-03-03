@@ -19,8 +19,8 @@ import {
 	DataTypeOption,
 	IDataAccountMeta,
 } from "solana-data-program";
-
-const ReactJsonDynamic = dynamic(import("react-json-view"), { ssr: false });
+import { JsonView } from 'react-json-view-lite';
+import 'react-json-view-lite/dist/index.css';
 
 const JSONDisplay = ({
 	json,
@@ -275,32 +275,28 @@ const JSONDisplay = ({
 					</select>
 				</div>
 			</div>
-			<ReactJsonDynamic
-				src={data}
-				name={null}
+			<div 
 				style={{
 					padding: "0.5rem",
 					borderRadius: "0.5rem",
 					overflowX: "auto",
+					backgroundColor: editorTheme === "light" ? "#ffffff" : "#1c1917"
 				}}
-				theme={EditorThemeMap.get(editorTheme)}
-				iconStyle="square"
-				onEdit={
-					meta.dataStatus != DataStatusOption.FINALIZED
-						? (e) => setData(e.updated_src)
-						: undefined
-				}
-				onAdd={
-					meta.dataStatus != DataStatusOption.FINALIZED
-						? (e) => setData(e.updated_src)
-						: undefined
-				}
-				onDelete={
-					meta.dataStatus != DataStatusOption.FINALIZED
-						? (e) => setData(e.updated_src)
-						: undefined
-				}
-			/>
+			>
+				<JsonView 
+					data={data} 
+					shouldExpandNode={() => true}
+					style={{
+						backgroundColor: editorTheme === "light" ? "#ffffff" : "#1c1917",
+						color: editorTheme === "light" ? "#000000" : "#ffffff"
+					}}
+				/>
+			</div>
+			{meta.dataStatus != DataStatusOption.FINALIZED && (
+				<div className="mt-4 text-sm text-stone-500">
+					<p>To edit JSON data, please use the Custom view mode and edit the raw JSON.</p>
+				</div>
+			)}
 		</div>
 	);
 };
